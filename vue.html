@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My first Vue app</title>
+  <script src="https://unpkg.com/vue"></script>
+</head>
+<body>
+  <div id="app">
+    <span v-bind:title='message'>鼠标停留几秒查看动态绑定的信息</span>
+    <p>{{ message }}</p>
+    <div>computed reversed message {{reversedMessage}} </div>
+    <input v-model='message'>
+    <button v-on:click="reverseMessage">逆转消息</button>
+    <div v-if='seen'>可见</div>
+    <ol>
+      <li v-for="todo in todos">{{todo.text}}</li>
+    </ol>
+    <ul>
+      <todo-item
+        v-for="item in grocyList"
+        v-bind:todo="item"
+        v-bind:key="item.id"></todo-item>
+    </ul>
+    <table>
+      <thead>
+        <tr>
+          <th>
+            <input type="checkbox" v-model="allChecked" />
+            全选{{checkedCount}}
+          </th>
+          <th>name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="item in list">
+          <td>
+            <input type="checkbox" :value="item.name" v-model="checked">
+          </td>
+          <td>
+            {{item.name}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+  //Vue组件
+    Vue.component('todo-item', {
+      props: ['todo'],
+      template: '<li>{{todo.text}}</li>'
+    })
+    var _list = [{
+      name: "小明",
+      age: 23
+    }, {
+      name: "小红",
+      age: 20
+    }, {
+      name: "Sigma",
+      age: 28
+    }];
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        list: [{
+                name: "小明",
+                age: 23
+              }, {
+                name: "小红",
+                age: 20
+              }, {
+                name: "Sigma",
+                age: 28
+              }],
+        checked: [],
+        message: 'Hello Vue.js!' + new Date().toLocaleString(),
+        seen: true,
+        todos: [
+          {text: 'lallal'},
+          {text: 'aaaaa'},
+          {text: 'kkfkkf'}
+        ],
+        grocyList: [
+          {id: 0, text: '蔬菜'},
+          {id: 1, text: 'nailao'},
+          {id: 2, text: 'chide'}
+        ]
+      },
+      methods: {
+        reverseMessage: function() {
+          this.message = this.message.split('').reverse().join('')
+        }
+      },
+      computed: {
+        reversedMessage: function() {
+          return this.message.split('').reverse().join('')
+        },
+        checkedCount: {
+          get: function() {
+            return this.checked.length;
+          }
+        },
+        allChecked: {
+          get: function() {
+            return this.checkedCount == this.list.length;
+          },
+          set: function(value) {
+            if (value) {
+              // console.log(value);
+              this.checked = this.list.map(function(item) {
+                return item.name
+              })
+            } else {
+              this.checked = []
+            }
+          }
+        }
+      }
+    })
+  </script>
+</body>
+</html>
